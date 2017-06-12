@@ -1,0 +1,16 @@
+{
+    "name": "laurent35240/magento2-gocardless",
+    "description": "Magento2 module for GoCardless payment gateway",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Laurent Clouet",
+            "email": "laurent35240@gmail.com"
+        }
+    ],
+    "require": {
+        "magento/module-payment": "100.1.*",
+        "magento/module-checkout": "100.1.*",
+        "magento/module-sales": "100.1.*"
+    }
+}

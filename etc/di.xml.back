@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Payment Method Facade configuration -->
+    <virtualType name="GoCardlessFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Laurent35240\GoCardless\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Laurent35240\GoCardless\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Laurent35240\GoCardless\Block\Info</argument>
+            <!--<argument name="valueHandlerPool" xsi:type="object">GoCardlessValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">GoCardlessValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">GoCardlessCommandPool</argument>-->
+        </arguments>
+    </virtualType>
+
+    <!--<virtualType name="GoCardlessValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">GoCardlessConfigValueHandler</item>
+                <item name="can_void" xsi:type="string">Laurent35240\GoCardless\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Laurent35240\GoCardless\Gateway\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GoCardlessConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">Magento\Payment\Gateway\Config\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GoCardlessValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">GoCardlessCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GoCardlessCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">Magento\Payment\Gateway\Config\Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GoCardlessCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">GocardlessAuthorizeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    
+    <virtualType name="GocardlessAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">GoCardlessAuthorizeRequest</argument>
+            <argument name="transferFactory" xsi:type="object">Laurent35240\GoCardless\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">Magento\Payment\Gateway\Http\Client\Zend</argument>
+            <argument name="handler" xsi:type="object">GoCardlessAuthorizationHandler</argument>
+            <argument name="validator" xsi:type="object">Laurent35240\GoCardless\Gateway\Validator\ResponseValidator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GoCardlessAuthorizeRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array"></argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GoCardlessAuthorizationHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array"></argument>
+        </arguments>
+    </virtualType>-->
+</config>

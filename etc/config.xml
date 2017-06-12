@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <gocardless>
+                <active>1</active>
+                <model>Laurent35240\GoCardless\Model\PaymentMethod</model>
+                <order_status>pending</order_status>
+                <title>GoCardless</title>
+                <is_gateway>1</is_gateway>
+                <payment_action>authorize_capture</payment_action>
+                <can_use_checkout>1</can_use_checkout>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+            </gocardless>
+        </payment>
+    </default>
+</config>
