@@ -11,6 +11,7 @@
     "require": {
         "magento/module-payment": "100.1.*",
         "magento/module-checkout": "100.1.*",
-        "magento/module-sales": "100.1.*"
+        "magento/module-sales": "100.1.*",
+        "gocardless/gocardless": "^0.4.2"
     }
 }

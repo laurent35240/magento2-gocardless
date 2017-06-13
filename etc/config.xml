@@ -10,6 +10,7 @@
         <payment>
             <gocardless>
                 <active>1</active>
+                <sandbox_environment>1</sandbox_environment>
                 <model>Laurent35240\GoCardless\Model\PaymentMethod</model>
                 <order_status>pending</order_status>
                 <title>GoCardless</title>
