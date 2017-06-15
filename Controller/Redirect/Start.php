@@ -8,19 +8,15 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver as LocaleResolver;
-use Magento\Quote\Model\Quote;
 use Psr\Log\LoggerInterface;
 
 class Start extends AbstractAction
 {
-    /** @var  CheckoutSession */
-    private $checkoutSession;
+
 
     /** @var  LocaleResolver */
     private $localeResolver;
 
-    /** @var  null|Quote */
-    private $quote;
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -29,9 +25,8 @@ class Start extends AbstractAction
         LocaleResolver $localeResolver,
         Context $context)
     {
-        $this->checkoutSession = $checkoutSession;
         $this->localeResolver = $localeResolver;
-        parent::__construct($scopeConfig, $logger, $context);
+        parent::__construct($scopeConfig, $logger, $checkoutSession, $context);
     }
 
 
@@ -70,22 +65,6 @@ class Start extends AbstractAction
         }
 
         return $this->_redirect('checkout/cart');
-    }
-
-    /**
-     * @return Quote
-     * @throws \Exception
-     */
-    private function getQuote()
-    {
-        if (!$this->quote) {
-            if (!$this->checkoutSession) {
-                throw new \Exception('No checkout session');
-            }
-            $this->quote = $this->checkoutSession->getQuote();
-        }
-
-        return $this->quote;
     }
 
     /**
