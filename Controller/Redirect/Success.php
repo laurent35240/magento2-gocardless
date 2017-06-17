@@ -41,13 +41,26 @@ class Success extends AbstractAction
             $redirectFlowId = $this->getRequest()->getParam('redirect_flow_id');
             $goCardlessClient = $this->getGoCardlessClient();
 
-            $goCardlessClient->redirectFlows()->complete($redirectFlowId, [
+            $redirectFlow = $goCardlessClient->redirectFlows()->complete($redirectFlowId, [
                 'params' => [
                     'session_token' => $this->getSessionToken()
                 ]
             ]);
 
-            $this->paymentMethod->place();
+            $mandateId = $redirectFlow->links->mandate;
+
+            $order = $this->paymentMethod->place();
+
+            $goCardlessClient->payments()->create([
+                'params' => [
+                    'amount' => round($order->getGrandTotal() * 100),
+                    'currency' => $order->getOrderCurrencyCode(),
+                    'reference' => $order->getIncrementId(),
+                    'links' => [
+                        'mandate'   => $mandateId
+                    ]
+                ]
+            ]);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $this->messageManager->addExceptionMessage($e, 'Error processing GoCarless payment: ' . $e->getMessage());

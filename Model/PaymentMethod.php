@@ -6,6 +6,8 @@ namespace Laurent35240\GoCardless\Model;
 
 class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
+    const ALLOWED_CURENCY_CODES = ['GBP', 'EUR', 'SEK'];
+
     protected $_code = 'gocardless';
 
     /**
@@ -108,9 +110,17 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     /** @var \Magento\Quote\Model\QuoteManagement  */
     private $quoteManagement;
 
+    /** @var \Magento\Customer\Model\Session  */
+    private $customerSession;
+
+    /** @var \Magento\Checkout\Helper\Data  */
+    private $checkoutData;
+
     public function __construct(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
+        \Magento\Customer\Model\Session $customerSession,
+        \Magento\Checkout\Helper\Data $checkoutData,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
@@ -124,6 +134,8 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     ) {
         $this->quote = $quote;
         $this->quoteManagement = $quoteManagement;
+        $this->customerSession = $customerSession;
+        $this->checkoutData = $checkoutData;
         parent::__construct(
             $context,
             $registry,
@@ -138,13 +150,64 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
         );
     }
 
+    public function canUseForCurrency($currencyCode)
+    {
+        return in_array($currencyCode, self::ALLOWED_CURENCY_CODES);
+    }
+
     /**
      * PLace the order when customer returns from GoCardless page
      */
     public function place()
     {
+        if ($this->getCheckoutMethod() == \Magento\Checkout\Model\Type\Onepage::METHOD_GUEST) {
+            $this->prepareGuestQuote();
+        }
+
         $this->quote->collectTotals();
         $order = $this->quoteManagement->submit($this->quote);
         return $order;
+    }
+
+    /**
+     * Get checkout method
+     *
+     * @return string
+     */
+    private function getCheckoutMethod()
+    {
+        if ($this->getCustomerSession()->isLoggedIn()) {
+            return \Magento\Checkout\Model\Type\Onepage::METHOD_CUSTOMER;
+        }
+        if (!$this->quote->getCheckoutMethod()) {
+            if ($this->checkoutData->isAllowedGuestCheckout($this->quote)) {
+                $this->quote->setCheckoutMethod(\Magento\Checkout\Model\Type\Onepage::METHOD_GUEST);
+            } else {
+                $this->quote->setCheckoutMethod(\Magento\Checkout\Model\Type\Onepage::METHOD_REGISTER);
+            }
+        }
+        return $this->quote->getCheckoutMethod();
+    }
+
+    /**
+     * Get customer session object
+     *
+     * @return \Magento\Customer\Model\Session
+     */
+    public function getCustomerSession()
+    {
+        return $this->customerSession;
+    }
+
+    /**
+     * Prepare quote for guest checkout order submit
+     */
+    private function prepareGuestQuote()
+    {
+        $quote = $this->quote;
+        $quote->setCustomerId(null)
+            ->setCustomerEmail($quote->getBillingAddress()->getEmail())
+            ->setCustomerIsGuest(true)
+            ->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
     }
 }
