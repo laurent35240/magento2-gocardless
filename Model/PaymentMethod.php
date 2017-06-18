@@ -4,9 +4,12 @@
 namespace Laurent35240\GoCardless\Model;
 
 
+use Magento\Sales\Model\Order;
+
 class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
-    const ALLOWED_CURENCY_CODES = ['GBP', 'EUR', 'SEK'];
+    const ALLOWED_CURRENCY_CODES = ['GBP', 'EUR', 'SEK'];
+    const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
 
     protected $_code = 'gocardless';
 
@@ -104,6 +107,13 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected $_canReviewPayment = true;
 
+    /**
+     * Payment Method feature
+     *
+     * @var bool
+     */
+    protected $_isInitializeNeeded = true;
+
     /** @var \Magento\Quote\Model\Quote  */
     private $quote;
 
@@ -152,7 +162,35 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function canUseForCurrency($currencyCode)
     {
-        return in_array($currencyCode, self::ALLOWED_CURENCY_CODES);
+        return in_array($currencyCode, self::ALLOWED_CURRENCY_CODES);
+    }
+
+    /**
+     * Instantiate state and set it to state object
+     *
+     * @param string $paymentAction
+     * @param \Magento\Framework\DataObject $stateObject
+     * @return void
+     */
+    public function initialize($paymentAction, $stateObject)
+    {
+        switch ($paymentAction) {
+            case self::ACTION_AUTHORIZE_CAPTURE:
+                /** @var \Magento\Sales\Model\Order\Payment $payment */
+                $payment = $this->getInfoInstance();
+                /** @var Order $order */
+                $order = $payment->getOrder();
+                $order->setCanSendNewEmailFlag(false);
+                $payment->setAmountAuthorized($order->getTotalDue());
+                $payment->setBaseAmountAuthorized($order->getBaseTotalDue());
+
+                $stateObject->setData('state', Order::STATE_PENDING_PAYMENT);
+                $stateObject->setData('status', Order::STATE_PENDING_PAYMENT);
+                $stateObject->setData('is_notified', false);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
