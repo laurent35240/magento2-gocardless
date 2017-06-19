@@ -8,12 +8,15 @@ cache:
   - "$HOME/.composer/cache"
 
 before_script:
-  - phpenv config-rm xdebug.ini
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
   - composer install --prefer-dist
 
 script:
-  - vendor/bin/phpunit Test
+  - vendor/bin/phpunit --coverage-clover=coverage.clover Test
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
 env:
   global:
