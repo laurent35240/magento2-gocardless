@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Tests">
+            <directory>Test</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-clover" target="coverage.clover"/>
+    </logging>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">.</directory>
+            <exclude>
+                <directory>vendor</directory>
+                <directory>Test</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
