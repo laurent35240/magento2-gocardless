@@ -24,6 +24,9 @@ abstract class AbstractAction extends Action
     /** @var  CheckoutSession */
     protected $checkoutSession;
 
+    /** @var  Client */
+    private $goCardlessClient;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LoggerInterface $logger,
@@ -41,14 +44,22 @@ abstract class AbstractAction extends Action
      */
     protected function getGoCardlessClient()
     {
-        $accessToken = $this->scopeConfig->getValue('payment/gocardless/access_token');
-        $sandboxEnvironment = (bool)$this->scopeConfig->getValue('payment/gocardless/sandbox_environment');
-        $environment = $sandboxEnvironment ? Environment::SANDBOX : Environment::LIVE;
-        $client = new Client([
-            'access_token' => $accessToken,
-            'environment' => $environment
-        ]);
-        return $client;
+        if (!$this->goCardlessClient) {
+            $accessToken = $this->scopeConfig->getValue('payment/gocardless/access_token');
+            $sandboxEnvironment = (bool)$this->scopeConfig->getValue('payment/gocardless/sandbox_environment');
+            $environment = $sandboxEnvironment ? Environment::SANDBOX : Environment::LIVE;
+            $client = new Client([
+                'access_token' => $accessToken,
+                'environment' => $environment
+            ]);
+            $this->goCardlessClient = $client;
+        }
+        return $this->goCardlessClient;
+    }
+
+    public function setGoCardlessClient(Client $goCardlessClient)
+    {
+        $this->goCardlessClient = $goCardlessClient;
     }
 
     protected function getSessionToken()

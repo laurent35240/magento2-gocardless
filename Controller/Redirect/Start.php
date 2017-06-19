@@ -12,8 +12,6 @@ use Psr\Log\LoggerInterface;
 
 class Start extends AbstractAction
 {
-
-
     /** @var  LocaleResolver */
     private $localeResolver;
 
@@ -30,6 +28,9 @@ class Start extends AbstractAction
     }
 
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface
+     */
     public function execute()
     {
         try {
