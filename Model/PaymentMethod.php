@@ -195,6 +195,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
     /**
      * PLace the order when customer returns from GoCardless page
+     * @return \Magento\Sales\Model\Order
      */
     public function place()
     {
@@ -203,6 +204,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
         }
 
         $this->quote->collectTotals();
+        /** @var \Magento\Sales\Model\Order $order */
         $order = $this->quoteManagement->submit($this->quote);
         return $order;
     }

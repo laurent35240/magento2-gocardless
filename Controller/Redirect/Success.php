@@ -50,6 +50,9 @@ class Success extends AbstractAction
             $mandateId = $redirectFlow->links->mandate;
 
             $order = $this->paymentMethod->place();
+            if (!$order) {
+                throw new \Exception('Order not created');
+            }
 
             $goCardlessClient->payments()->create([
                 'params' => [
@@ -65,10 +68,11 @@ class Success extends AbstractAction
             // prepare session to success or cancellation page
             $this->checkoutSession->clearHelperData();
             $quoteId = $this->getQuote()->getId();
-            $this->checkoutSession->setLastQuoteId($quoteId)->setLastSuccessQuoteId($quoteId);
-            $this->checkoutSession->setLastOrderId($order->getId())
-                ->setLastRealOrderId($order->getIncrementId())
-                ->setLastOrderStatus($order->getStatus());
+            $this->checkoutSession->setLastQuoteId($quoteId);
+            $this->checkoutSession->setLastSuccessQuoteId($quoteId);
+            $this->checkoutSession->setLastOrderId($order->getId());
+            $this->checkoutSession->setLastRealOrderId($order->getIncrementId());
+            $this->checkoutSession->setLastOrderStatus($order->getStatus());
 
             return $this->_redirect('checkout/onepage/success');
         } catch (\Exception $e) {
