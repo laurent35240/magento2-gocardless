@@ -70,7 +70,6 @@ class SucessTest extends TestCase
             ->willReturn($paymentService);
         $controller->setGoCardlessClient($goCardlessClient);
 
-        /** @var Response $response */
-        $response = $controller->execute();
+        $controller->execute();
     }
 }
