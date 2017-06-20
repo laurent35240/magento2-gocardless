@@ -61,9 +61,19 @@ class Success extends AbstractAction
                     ]
                 ]
             ]);
+
+            // prepare session to success or cancellation page
+            $this->checkoutSession->clearHelperData();
+            $quoteId = $this->getQuote()->getId();
+            $this->checkoutSession->setLastQuoteId($quoteId)->setLastSuccessQuoteId($quoteId);
+            $this->checkoutSession->setLastOrderId($order->getId())
+                ->setLastRealOrderId($order->getIncrementId())
+                ->setLastOrderStatus($order->getStatus());
+
+            return $this->_redirect('checkout/onepage/success');
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->messageManager->addExceptionMessage($e, 'Error processing GoCarless payment: ' . $e->getMessage());
+            $this->messageManager->addExceptionMessage($e, 'Error processing GoCardless payment: ' . $e->getMessage());
         }
 
         return $this->_redirect('checkout/cart');
