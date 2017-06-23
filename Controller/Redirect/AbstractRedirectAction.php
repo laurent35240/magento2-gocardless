@@ -58,7 +58,7 @@ abstract class AbstractRedirectAction extends AbstractAction
 
     protected function getSessionToken()
     {
-        return session_id();
+        return $this->checkoutSession->getSessionId();
     }
 
     /**
