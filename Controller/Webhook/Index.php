@@ -31,7 +31,7 @@ class Index extends AbstractAction
             /** @var \Magento\Framework\App\Response\Http $response */
             $response = $this->getResponse();
             $response->setBody('Invalid signature');
-            $response->setStatusCode(401);
+            $response->setCustomStatusCode(498);
             return $response;
         }
         return $this->getResponse();
