@@ -20,7 +20,7 @@ class StartTest extends TestCase
             $this->getLoggerInterfaceMock(),
             $this->getCheckoutSessionMockWithQuote(),
             $localeResolver,
-            $this->getContextMockWithUrlAndResponse()
+            $this->getContextMock()
         );
 
         $expectedRedirectUrl = 'https://pay.gocardless.com/flow/RE123';

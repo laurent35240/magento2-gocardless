@@ -13,7 +13,7 @@ class Index extends AbstractAction
     /**
      * Dispatch request
      *
-     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @return \Magento\Framework\App\Response\Http
      * @throws \Magento\Framework\Exception\NotFoundException
      */
     public function execute()
@@ -26,14 +26,14 @@ class Index extends AbstractAction
         $providedSignature = $request->getHeader('Webhook-Signature');
         $calculatedSignature = hash_hmac("sha256", $rawPayload, $webhookSecret);
 
+        /** @var \Magento\Framework\App\Response\Http $response */
+        $response = $this->getResponse();
         if ($providedSignature != $calculatedSignature) {
             $this->logger->error('Wrong signature received from GoCardless webhook');
-            /** @var \Magento\Framework\App\Response\Http $response */
-            $response = $this->getResponse();
             $response->setBody('Invalid signature');
             $response->setCustomStatusCode(498);
             return $response;
         }
-        return $this->getResponse();
+        return $response;
     }
 }

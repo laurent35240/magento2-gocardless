@@ -6,7 +6,6 @@ namespace Laurent35240\GoCardless\Test\Unit\Controller\Redirect;
 use Laurent35240\GoCardless\Controller\Redirect\Success;
 use Laurent35240\GoCardless\Model\PaymentMethod;
 use Laurent35240\GoCardless\Test\TestCase;
-use Magento\Framework\HTTP\PhpEnvironment\Response;
 use Magento\Framework\ObjectManagerInterface;
 
 
@@ -29,17 +28,7 @@ class SucessTest extends TestCase
             ->method('getParam')
             ->with('redirect_flow_id')
             ->willReturn('RE123');
-        $redirect = $this->getMockBuilder(\Magento\Framework\App\Response\RedirectInterface::class)->getMock();
-        $context = $this->getContextMockWithUrlAndResponse();
-        $context->expects($this->any())
-            ->method('getObjectManager')
-            ->willReturn($objectManager);
-        $context->expects($this->any())
-            ->method('getRequest')
-            ->willReturn($request);
-        $context->expects($this->any())
-            ->method('getRedirect')
-            ->willReturn($redirect);
+        $context = $this->getContextMock($request, $objectManager);
 
         $controller = new Success(
             $this->getScopeConfigInterfaceMock(),
