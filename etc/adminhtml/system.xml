@@ -15,6 +15,9 @@
                     <label>Sandbox environment</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="webhook_secret" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Webhook Secret</label>
+                </field>
             </group>
         </section>
     </system>
