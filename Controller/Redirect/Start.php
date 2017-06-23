@@ -10,7 +10,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver as LocaleResolver;
 use Psr\Log\LoggerInterface;
 
-class Start extends AbstractAction
+class Start extends AbstractRedirectAction
 {
     /** @var  LocaleResolver */
     private $localeResolver;

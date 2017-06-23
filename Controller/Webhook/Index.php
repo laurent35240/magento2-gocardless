@@ -4,10 +4,10 @@
 namespace Laurent35240\GoCardless\Controller\Webhook;
 
 
-use Magento\Framework\App\Action\Action;
+use Laurent35240\GoCardless\Controller\AbstractAction;
 use Magento\Framework\App\ResponseInterface;
 
-class Index extends Action
+class Index extends AbstractAction
 {
 
     /**
@@ -18,6 +18,22 @@ class Index extends Action
      */
     public function execute()
     {
-        // TODO: Implement execute() method.
+        // Getting and checking webhook signature
+        $webhookSecret = $this->scopeConfig->getValue('payment/gocardless/webhook_secret');
+        /** @var \Magento\Framework\App\Request\Http $request */
+        $request = $this->getRequest();
+        $rawPayload = $request->getContent();
+        $providedSignature = $request->getHeader('Webhook-Signature');
+        $calculatedSignature = hash_hmac("sha256", $rawPayload, $webhookSecret);
+
+        if ($providedSignature != $calculatedSignature) {
+            $this->logger->error('Wrong signature received from GoCardless webhook');
+            /** @var \Magento\Framework\App\Response\Http $response */
+            $response = $this->getResponse();
+            $response->setBody('Invalid signature');
+            $response->setStatusCode(401);
+            return $response;
+        }
+        return $this->getResponse();
     }
 }

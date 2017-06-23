@@ -6,19 +6,15 @@ namespace Laurent35240\GoCardless\Controller\Redirect;
 
 use GoCardlessPro\Client;
 use GoCardlessPro\Environment;
+use Laurent35240\GoCardless\Controller\AbstractAction;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Action\Context;
 use Magento\Quote\Model\Quote;
 use Psr\Log\LoggerInterface;
 
-abstract class AbstractAction extends Action
+abstract class AbstractRedirectAction extends AbstractAction
 {
-    /** @var  ScopeConfigInterface */
-    protected $scopeConfig;
-    /** @var  LoggerInterface */
-    protected $logger;
     /** @var  null|Quote */
     protected $quote;
     /** @var  CheckoutSession */
@@ -33,10 +29,8 @@ abstract class AbstractAction extends Action
         CheckoutSession $checkoutSession,
         Context $context)
     {
-        $this->scopeConfig = $scopeConfig;
-        $this->logger = $logger;
         $this->checkoutSession = $checkoutSession;
-        parent::__construct($context);
+        parent::__construct($scopeConfig, $logger, $context);
     }
 
     /**

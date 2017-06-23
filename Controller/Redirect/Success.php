@@ -11,7 +11,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class Success extends AbstractAction
+class Success extends AbstractRedirectAction
 {
     /** @var  PaymentMethod */
     private $paymentMethod;
