@@ -13,7 +13,7 @@
                 <sandbox_environment>1</sandbox_environment>
                 <allowspecific>0</allowspecific>
                 <model>GoCardlessFacade</model>
-                <order_status>pending</order_status>
+                <order_status>pending_payment</order_status>
                 <title>GoCardless</title>
                 <is_gateway>1</is_gateway>
                 <payment_action>authorize_capture</payment_action>
@@ -23,6 +23,7 @@
                 <can_refund>1</can_refund>
                 <can_void>1</can_void>
                 <can_cancel>1</can_cancel>
+                <can_initialize>1</can_initialize>
             </gocardless>
         </payment>
     </default>

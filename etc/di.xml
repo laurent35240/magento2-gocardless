@@ -8,7 +8,7 @@
             <argument name="infoBlockType" xsi:type="string">Laurent35240\GoCardless\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">GoCardlessValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">GoCardlessValidatorPool</argument>
-            <!--<argument name="commandPool" xsi:type="object">GoCardlessCommandPool</argument>-->
+            <argument name="commandPool" xsi:type="object">GoCardlessCommandPool</argument>
         </arguments>
     </virtualType>
 
@@ -47,33 +47,11 @@
         </arguments>
     </virtualType>
 
-    <!--<virtualType name="GoCardlessCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="GoCardlessCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">GocardlessAuthorizeCommand</item>
+                <item name="initialize" xsi:type="string">Laurent35240\GoCardless\Gateway\Command\InitializeCommand</item>
             </argument>
         </arguments>
     </virtualType>
-    
-    <virtualType name="GocardlessAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">GoCardlessAuthorizeRequest</argument>
-            <argument name="transferFactory" xsi:type="object">Laurent35240\GoCardless\Gateway\Http\TransferFactory</argument>
-            <argument name="client" xsi:type="object">Magento\Payment\Gateway\Http\Client\Zend</argument>
-            <argument name="handler" xsi:type="object">GoCardlessAuthorizationHandler</argument>
-            <argument name="validator" xsi:type="object">Laurent35240\GoCardless\Gateway\Validator\ResponseValidator</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="GoCardlessAuthorizeRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
-        <arguments>
-            <argument name="builders" xsi:type="array"></argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="GoCardlessAuthorizationHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
-        <arguments>
-            <argument name="handlers" xsi:type="array"></argument>
-        </arguments>
-    </virtualType>-->
 </config>

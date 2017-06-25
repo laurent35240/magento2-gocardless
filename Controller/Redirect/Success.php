@@ -4,7 +4,7 @@
 namespace Laurent35240\GoCardless\Controller\Redirect;
 
 
-use Laurent35240\GoCardless\Model\PaymentMethod;
+use Laurent35240\GoCardless\Helper\OrderPlace;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -13,20 +13,18 @@ use Psr\Log\LoggerInterface;
 
 class Success extends AbstractRedirectAction
 {
-    /** @var  PaymentMethod */
-    private $paymentMethod;
+    /** @var  OrderPlace */
+    private $orderPlace;
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         LoggerInterface $logger,
         CheckoutSession $checkoutSession,
-        Context $context)
-    {
+        Context $context,
+        OrderPlace $orderPlace
+    ) {
         parent::__construct($scopeConfig, $logger, $checkoutSession, $context);
-        $quote = $this->getQuote();
-
-        $paymentMethod = $this->_objectManager->create(PaymentMethod::class, ['quote' => $quote]);
-        $this->paymentMethod = $paymentMethod;
+        $this->orderPlace = $orderPlace;
     }
 
     /**
@@ -37,6 +35,7 @@ class Success extends AbstractRedirectAction
      */
     public function execute()
     {
+        $quote = $this->checkoutSession->getQuote();
         try {
             $redirectFlowId = $this->getRequest()->getParam('redirect_flow_id');
             $goCardlessClient = $this->getGoCardlessClient();
@@ -49,16 +48,13 @@ class Success extends AbstractRedirectAction
 
             $mandateId = $redirectFlow->links->mandate;
 
-            $order = $this->paymentMethod->place();
-            if (!$order) {
-                throw new \Exception('Order not created');
-            }
+            $orderId = $this->orderPlace->execute($quote);
 
             $goCardlessClient->payments()->create([
                 'params' => [
-                    'amount' => round($order->getGrandTotal() * 100),
-                    'currency' => $order->getOrderCurrencyCode(),
-                    'reference' => $order->getIncrementId(),
+                    'amount' => round($quote->getGrandTotal() * 100),
+                    'currency' => $quote->getQuoteCurrencyCode(),
+                    'reference' => $orderId,
                     'links' => [
                         'mandate'   => $mandateId
                     ]
@@ -70,9 +66,7 @@ class Success extends AbstractRedirectAction
             $quoteId = $this->getQuote()->getId();
             $this->checkoutSession->setLastQuoteId($quoteId);
             $this->checkoutSession->setLastSuccessQuoteId($quoteId);
-            $this->checkoutSession->setLastOrderId($order->getId());
-            $this->checkoutSession->setLastRealOrderId($order->getIncrementId());
-            $this->checkoutSession->setLastOrderStatus($order->getStatus());
+            $this->checkoutSession->setLastOrderId($orderId);
 
             return $this->_redirect('checkout/onepage/success');
         } catch (\Exception $e) {

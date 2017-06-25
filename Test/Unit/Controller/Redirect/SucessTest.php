@@ -4,37 +4,29 @@
 namespace Laurent35240\GoCardless\Test\Unit\Controller\Redirect;
 
 use Laurent35240\GoCardless\Controller\Redirect\Success;
-use Laurent35240\GoCardless\Model\PaymentMethod;
+use Laurent35240\GoCardless\Helper\OrderPlace;
 use Laurent35240\GoCardless\Test\TestCase;
-use Magento\Framework\ObjectManagerInterface;
 
 
 class SucessTest extends TestCase
 {
     public function testExecute_completeRedirectFlowAndCreatePayment()
     {
-        $order = $this->getMockBuilder(\Magento\Sales\Model\Order::class)->disableOriginalConstructor()->getMock();
-        $paymentMethod = $this->getMockBuilder(PaymentMethod::class)->disableOriginalConstructor()->getMock();
-        $paymentMethod->expects($this->any())
-            ->method('place')
-            ->willReturn($order);
-        $objectManager = $this->getMockBuilder(ObjectManagerInterface::class)->getMock();
-        $objectManager->expects($this->any())
-            ->method('create')
-            ->with(PaymentMethod::class)
-            ->willReturn($paymentMethod);
         $request = $this->getMockBuilder(\Magento\Framework\App\RequestInterface::class)->getMock();
         $request->expects($this->any())
             ->method('getParam')
             ->with('redirect_flow_id')
             ->willReturn('RE123');
-        $context = $this->getContextMock($request, $objectManager);
+        $context = $this->getContextMock($request);
+
+        $orderPlace = $this->getMockBuilder(OrderPlace::class)->disableOriginalConstructor()->getMock();
 
         $controller = new Success(
             $this->getScopeConfigInterfaceMock(),
             $this->getLoggerInterfaceMock(),
             $this->getCheckoutSessionMockWithQuote(),
-            $context
+            $context,
+            $orderPlace
         );
 
         $goCardlessClient = $this->getGoCardlessClientMock();
