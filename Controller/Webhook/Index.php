@@ -5,7 +5,6 @@ namespace Laurent35240\GoCardless\Controller\Webhook;
 
 
 use Laurent35240\GoCardless\Controller\AbstractAction;
-use Magento\Framework\App\ResponseInterface;
 
 class Index extends AbstractAction
 {
