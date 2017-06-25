@@ -11,7 +11,8 @@
             <gocardless>
                 <active>1</active>
                 <sandbox_environment>1</sandbox_environment>
-                <model>Laurent35240\GoCardless\Model\PaymentMethod</model>
+                <allowspecific>0</allowspecific>
+                <model>GoCardlessFacade</model>
                 <order_status>pending</order_status>
                 <title>GoCardless</title>
                 <is_gateway>1</is_gateway>
